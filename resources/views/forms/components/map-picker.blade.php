@@ -70,7 +70,7 @@
 
             .filament-map-picker-search-input {
                 width: 100%;
-                padding: 10px 46px 10px 40px;
+                padding: 10px 64px 10px 40px;
                 font-size: 14px;
                 border: 1px solid #d1d5db;
                 border-radius: 8px;
@@ -138,6 +138,15 @@
                 transform: translateY(-50%);
                 display: flex;
                 gap: 4px;
+            }
+
+            .filament-map-picker-actions .filament-map-picker-btn {
+                padding: 4px;
+            }
+
+            .filament-map-picker-actions .filament-map-picker-btn svg {
+                width: 18px;
+                height: 18px;
             }
 
             .filament-map-picker-btn {
@@ -383,10 +392,18 @@
                         />
 
                         <div class="filament-map-picker-actions">
-                            <button type="button" x-show="hasLocation()" x-on:click="clearLocation()" class="filament-map-picker-btn filament-map-picker-btn-danger" title="{{ __('Clear') }}">
-                                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                                </svg>
+                            <button
+                                type="button"
+                                x-show="searchIsCollapsible && isSearchOpen"
+                                x-on:click="closeSearch()"
+                                class="filament-map-picker-btn"
+                                title="{{ __('Close search') }}"
+                            >
+                                @include('filament-map-picker::icons.close')
+                            </button>
+
+                            <button type="button" x-show="hasLocation()" x-on:click="clearLocation()" class="filament-map-picker-btn filament-map-picker-btn-danger" title="{{ __('Clear location') }}">
+                                @include('filament-map-picker::icons.clear-location')
                             </button>
                         </div>
 
@@ -678,6 +695,14 @@
                     });
                 },
 
+                closeSearch() {
+                    if (!this.searchIsCollapsible) return;
+                    this.isSearchOpen = false;
+                    this.showSuggestions = false;
+                    this.suggestions = [];
+                    this.isSearching = false;
+                },
+
                 collapseSearchIfEmpty() {
                     if (!this.searchIsCollapsible) return;
                     if ((this.searchQuery || '').trim().length > 0) return;
@@ -762,8 +787,6 @@
                     this.locationName = '';
                     this.searchQuery = '';
                     this.map.setView([this.defaultLat, this.defaultLng], this.defaultZoom);
-
-                    this.collapseSearchIfEmpty();
                 },
 
                 async getMyLocation() {
