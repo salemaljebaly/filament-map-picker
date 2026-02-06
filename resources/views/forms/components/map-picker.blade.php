@@ -435,6 +435,8 @@
                 map: null,
                 marker: null,
                 tileLayer: null,
+                currentLat: null,
+                currentLng: null,
                 searchQuery: '',
                 suggestions: [],
                 showSuggestions: false,
@@ -490,15 +492,15 @@
                 },
 
                 getLat() {
-                    return this.$wire.get(this.wireModelPrefix + '.' + this.latField) || null;
+                    return this.currentLat;
                 },
 
                 getLng() {
-                    return this.$wire.get(this.wireModelPrefix + '.' + this.lngField) || null;
+                    return this.currentLng;
                 },
 
                 hasLocation() {
-                    return this.getLat() && this.getLng();
+                    return this.currentLat !== null && this.currentLng !== null;
                 },
 
                 getDisplayCoords() {
@@ -518,11 +520,15 @@
                         return;
                     }
 
-                    const existingLat = this.getLat();
-                    const existingLng = this.getLng();
-                    const lat = existingLat ? parseFloat(existingLat) : this.defaultLat;
-                    const lng = existingLng ? parseFloat(existingLng) : this.defaultLng;
-                    const zoom = existingLat ? 15 : this.defaultZoom;
+                    const existingLat = this.$wire.get(this.wireModelPrefix + '.' + this.latField);
+                    const existingLng = this.$wire.get(this.wireModelPrefix + '.' + this.lngField);
+
+                    this.currentLat = (existingLat !== null && existingLat !== undefined && existingLat !== '') ? parseFloat(existingLat) : null;
+                    this.currentLng = (existingLng !== null && existingLng !== undefined && existingLng !== '') ? parseFloat(existingLng) : null;
+
+                    const lat = this.currentLat ?? this.defaultLat;
+                    const lng = this.currentLng ?? this.defaultLng;
+                    const zoom = this.currentLat !== null ? 15 : this.defaultZoom;
 
                     this.map = L.map(@js($mapId), { zoomControl: false }).setView([lat, lng], zoom);
 
@@ -535,7 +541,7 @@
                         this.observeThemeChanges();
                     }
 
-                    if (existingLat && existingLng) {
+                    if (this.currentLat !== null && this.currentLng !== null) {
                         this.addMarker(lat, lng);
                         this.reverseGeocode(lat, lng);
                     }
@@ -736,11 +742,15 @@
                 },
 
                 updateCoordinates(lat, lng) {
+                    this.currentLat = lat;
+                    this.currentLng = lng;
                     this.$wire.set(this.wireModelPrefix + '.' + this.latField, parseFloat(lat.toFixed(8)));
                     this.$wire.set(this.wireModelPrefix + '.' + this.lngField, parseFloat(lng.toFixed(8)));
                 },
 
                 clearLocation() {
+                    this.currentLat = null;
+                    this.currentLng = null;
                     this.$wire.set(this.wireModelPrefix + '.' + this.latField, null);
                     this.$wire.set(this.wireModelPrefix + '.' + this.lngField, null);
 
