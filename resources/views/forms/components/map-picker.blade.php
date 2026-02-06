@@ -70,7 +70,7 @@
 
             .filament-map-picker-search-input {
                 width: 100%;
-                padding: 10px 64px 10px 40px;
+                padding: 10px 64px 10px 14px;
                 font-size: 14px;
                 border: 1px solid #d1d5db;
                 border-radius: 8px;
@@ -372,10 +372,6 @@
 
                 <div class="filament-map-picker-search" x-show="!searchIsCollapsible || isSearchOpen" x-transition>
                     <div style="position: relative;">
-                        <div class="filament-map-picker-search-icon">
-                            @include('filament-map-picker::icons.search')
-                        </div>
-
                         <input
                             type="text"
                             dir="auto"
@@ -403,7 +399,9 @@
                             </button>
 
                             <button type="button" x-show="hasLocation()" x-on:click="clearLocation()" class="filament-map-picker-btn filament-map-picker-btn-danger" title="{{ __('Clear location') }}">
-                                @include('filament-map-picker::icons.clear-location')
+                                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
                             </button>
                         </div>
 

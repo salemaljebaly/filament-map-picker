@@ -34,29 +34,6 @@ A simple, polished **Filament v5** map picker field built on **Leaflet + OpenStr
 composer require salemaljebaly/filament-map-picker
 ```
 
-### Installing from GitHub (before Packagist)
-
-If the package isn’t published on Packagist yet, add a VCS repository entry to your app’s `composer.json`:
-
-```json
-{
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/salemaljebaly/filament-map-picker"
-    }
-  ]
-}
-```
-
-Then require a version (example):
-
-```bash
-composer require salemaljebaly/filament-map-picker:^1.0
-```
-
-Once the package is on Packagist, you can remove the `repositories` block.
-
 Publish config (optional):
 
 ```bash
